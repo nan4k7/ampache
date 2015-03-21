@@ -247,7 +247,7 @@ class Stream
         return $image;
     }
 
-    private static function start_process($command, $settings = array())
+        private static function start_process($command, $settings = array())
     {
         debug_event('stream', "Transcode command: " . $command, 3);
 
@@ -255,9 +255,15 @@ class Stream
         if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
             // Windows doesn't like to provide stderr as a pipe
             $descriptors[2] = array('pipe', 'w');
+            $cmdPrefix = "exec ";
         }
+        else
+            $cmdPrefix = "start /B ";
 
-        $process = proc_open($command, $descriptors, $pipes);
+
+        debug_event('stream', "Transcode command prefix: " . $cmdPrefix, 3);
+
+        $process = proc_open($cmdPrefix.$command, $descriptors, $pipes);
         $parray = array(
             'process' => $process,
             'handle' => $pipes[1],
